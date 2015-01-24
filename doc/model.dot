@@ -22,6 +22,9 @@ digraph kurz {
   hit:origin -> eventinfo:k;
   hit:short -> short:k;
 
+  likings:long -> long:k;
+  likings:user -> user:k;
+
   longmeta:info -> eventinfo:k;
   longmeta:language -> language:k;
   longmeta:long -> long:k;
