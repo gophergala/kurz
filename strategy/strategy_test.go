@@ -12,7 +12,7 @@ func initTestStorage(t *testing.T) {
 	storage.Service.SetDSN(DSN)
 	err := storage.Service.Open()
 	if err != nil {
-		t.Fatalf("Failed opening the test database: %+V", err)
+		t.Fatalf("Failed opening the test database: %+v", err)
 	}
 }
 
@@ -28,24 +28,28 @@ func TestBaseAlias(t *testing.T) {
 	}
 
 	initTestStorage(t)
+	// defers are executed LIFO
 	defer storage.Service.Close()
+
+	storage.Service.Truncate("shorturl")
+	storage.Service.Truncate("longurl")
+	storage.Service.AddToTruncateList("shorturl")
+	storage.Service.AddToTruncateList("longurl")
 
 	sourceUrl := url.LongUrl{
 		Value: "http://www.example.com",
 	}
-	alias, err := strategy.Alias(sourceUrl, storage.Service)
+	alias, err := strategy.Alias(&sourceUrl, storage.Service)
 	if err != nil {
 		t.Errorf("Failed during Alias(): %+v", err)
 	}
-	if alias.ShortFor != sourceUrl {
-		t.Errorf("Aliasing does not point to proper long URL: expected %+V, got %+V", sourceUrl, alias.ShortFor)
+	if alias.ShortFor.Id != sourceUrl.Id {
+		t.Errorf("Aliasing does not point to proper long URL: expected %+v, got %+v", sourceUrl, alias.ShortFor)
 	}
 
 	if alias.Value != sourceUrl.Value {
-		t.Errorf("Aliasing does not build the proper URL: expected %+V, got %+V", sourceUrl.Value, alias.Value)
+		t.Errorf("Aliasing does not build the proper URL: expected %+v, got %+v", sourceUrl.Value, alias.Value)
 	}
-
-	storage.Service.DB.Exec("TRUNCATE shorturl")
 }
 
 func TestUseCounts(t *testing.T) {
@@ -61,6 +65,10 @@ func TestUseCounts(t *testing.T) {
 
 	initTestStorage(t)
 	defer storage.Service.Close()
+	storage.Service.Truncate("shorturl")
+	storage.Service.Truncate("longurl")
+	storage.Service.AddToTruncateList("shorturl")
+	storage.Service.AddToTruncateList("longurl")
 
 	initialCount := strategy.UseCount(storage.Service)
 	if initialCount != 0 {
@@ -70,7 +78,7 @@ func TestUseCounts(t *testing.T) {
 	sourceUrl := url.LongUrl{
 		Value: "http://www.example.com",
 	}
-	_, err := strategy.Alias(sourceUrl, storage.Service)
+	_, err := strategy.Alias(&sourceUrl, storage.Service)
 	if err != nil {
 		t.Errorf("Failed during Alias(): %+v", err)
 	}
@@ -83,7 +91,7 @@ func TestUseCounts(t *testing.T) {
 	sourceUrl = url.LongUrl{
 		Value: "http://www2.example.com",
 	}
-	_, err = strategy.Alias(sourceUrl, storage.Service)
+	_, err = strategy.Alias(&sourceUrl, storage.Service)
 	if err != nil {
 		t.Errorf("Failed during Alias(): %+v", err)
 	}
@@ -92,6 +100,4 @@ func TestUseCounts(t *testing.T) {
 	if nextCount != initialCount+2 {
 		t.Errorf("Found %d record(s) in test database, expecting %d.", nextCount, initialCount+2)
 	}
-
-	storage.Service.DB.Exec("TRUNCATE shorturl")
 }

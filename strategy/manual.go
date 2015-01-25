@@ -21,7 +21,7 @@ Alias() implements AliasingStrategy.Alias().
 
   - options is expected to be a non empty single string
 */
-func (y ManualStrategy) Alias(long url.LongUrl, s storage.Storage, options ...interface{}) (url.ShortUrl, error) {
+func (y ManualStrategy) Alias(long *url.LongUrl, s storage.Storage, options ...interface{}) (url.ShortUrl, error) {
 	var ret url.ShortUrl
 	var err error
 	if len(options) != 1 {
@@ -30,7 +30,7 @@ func (y ManualStrategy) Alias(long url.LongUrl, s storage.Storage, options ...in
 	} else {
 		requestedAlias, ok := options[0].(string)
 		if !ok {
-			err = errors.New(fmt.Sprintf("ManualString.Alias() optional parameter must be a string, got: %+V", requestedAlias))
+			err = errors.New(fmt.Sprintf("ManualString.Alias() optional parameter must be a string, got: %+v", requestedAlias))
 			return ret, err
 		}
 
@@ -40,7 +40,7 @@ func (y ManualStrategy) Alias(long url.LongUrl, s storage.Storage, options ...in
 		 */
 		ret = url.ShortUrl{
 			Value:       requestedAlias,
-			ShortFor:    long,
+			ShortFor:    *long,
 			Domain:      long.Domain(),
 			Strategy:    y.Name(),
 			SubmittedBy: storage.CurrentUser(),

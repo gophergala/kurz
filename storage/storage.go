@@ -19,11 +19,13 @@ import (
 	"database/sql"
 	"flag"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 )
 
 type Storage struct {
-	DB  *sql.DB
-	DSN string
+	DB           *sql.DB
+	DSN          string
+	truncateList []string
 }
 
 var Service Storage = Storage{}
@@ -47,9 +49,27 @@ Close() closes the database connection and releases its information.
 */
 func (s *Storage) Close() {
 	if s.DB != nil {
+		for _, name := range s.truncateList {
+			s.Truncate(name)
+		}
 		s.DB.Close()
 	}
 	s.DB = nil
+}
+
+func (s *Storage) AddToTruncateList(name string) {
+	s.truncateList = append(s.truncateList, name)
+}
+
+func (s *Storage) Truncate(name string) {
+	if s.DB == nil {
+		panic("Cannot truncate a non-connected database.")
+	}
+	// Cannot use truncate on a master table (longurl vs shorturl) with MySQL.
+	_, err := s.DB.Exec("DELETE FROM " + name)
+	if err != nil {
+		log.Printf("Error truncating %s: %+v\n", name, err)
+	}
 }
 
 /*

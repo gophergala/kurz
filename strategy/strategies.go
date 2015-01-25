@@ -60,7 +60,7 @@ GROUP BY strategy
 		}
 
 		if !Strategies.IsValid(strategyResult.String) {
-			log.Fatalf("'%#V' is not a valid strategy\n", strategyResult)
+			log.Fatalf("'%#v' is not a valid strategy\n", strategyResult)
 		}
 		ss[strategyResult.String] = countResult.Int64
 	}

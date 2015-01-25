@@ -3,6 +3,7 @@ package url
 import "github.com/FGM/kurz/storage"
 
 type LongUrl struct {
+	Id    int64
 	Value string
 }
 
