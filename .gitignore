@@ -6,6 +6,9 @@
 *.a
 *.so
 
+# Coverage results
+coverage.out
+
 # Folders
 _obj
 _test

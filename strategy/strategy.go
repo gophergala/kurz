@@ -10,10 +10,10 @@ Files
 package strategy
 
 import (
-	"errors"
 	"github.com/FGM/kurz/storage"
 	"github.com/FGM/kurz/url"
 	"log"
+	"time"
 )
 
 /*
@@ -23,9 +23,9 @@ The options parameter for Alias() MAY be used by some strategies, in which case 
 have to define their expectations about it.
 */
 type AliasingStrategy interface {
-	Name() string                                                        // Return the name of the strategy object
-	Alias(url url.LongUrl, options ...interface{}) (url.ShortUrl, error) // Return the short URL (alias) for a given long (source) URL
-	UseCount(storage storage.Storage) int                                // Return the number of short URLs (aliases) using this strategy.
+	Name() string                                                                           // Return the name of the strategy object
+	Alias(url url.LongUrl, s storage.Storage, options ...interface{}) (url.ShortUrl, error) // Return the short URL (alias) for a given long (source) URL
+	UseCount(storage storage.Storage) int                                                   // Return the number of short URLs (aliases) using this strategy.
 }
 
 type baseStrategy struct{}
@@ -34,11 +34,35 @@ func (y baseStrategy) Name() string {
 	return "base"
 }
 
-func (y baseStrategy) Alias(long url.LongUrl, options ...interface{}) (url.ShortUrl, error) {
-	var ret url.ShortUrl
-	var err error = errors.New("Base strategy is abstract")
+func (y baseStrategy) Alias(long url.LongUrl, s storage.Storage, options ...interface{}) (url.ShortUrl, error) {
+	var short url.ShortUrl
+	var err error
 
-	return ret, err
+	/** TODO
+	 * - validate alias is available
+	 */
+	short = url.ShortUrl{
+		Value:       long.Value,
+		ShortFor:    long,
+		Domain:      long.Domain(),
+		Strategy:    y.Name(),
+		SubmittedBy: storage.CurrentUser(),
+		SubmittedOn: time.Now().UTC().Unix(),
+		IsEnabled:   true,
+	}
+
+	sql := `
+		INSERT INTO shorturl(url, domain, strategy, submittedBy, submittedInfo, isEnabled)
+		VALUES (?, ?, ?, ?, ?, ?)
+		`
+	result, err := s.DB.Exec(sql, short.Value, short.Domain, short.Strategy, short.SubmittedBy.Id, short.SubmittedOn, short.IsEnabled)
+	if err != nil {
+		log.Printf("Failed inserting %s: %#V", short.Value, err)
+	} else {
+		short.Id, _ = result.LastInsertId()
+	}
+
+	return short, err
 }
 
 /**

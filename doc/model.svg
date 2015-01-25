@@ -137,7 +137,7 @@
 <polygon fill="none" stroke="black" points="282.5,-52 282.5,-208 403.5,-208 403.5,-52 282.5,-52"/>
 <text text-anchor="middle" x="343" y="-191.4" font-family="Times Roman,serif" font-size="14.00">Long metadata</text>
 <polyline fill="none" stroke="black" points="282.5,-182 403.5,-182 "/>
-<text text-anchor="middle" x="343" y="-165.4" font-family="Times Roman,serif" font-size="14.00">longUrl</text>
+<text text-anchor="middle" x="343" y="-165.4" font-family="Times Roman,serif" font-size="14.00">url</text>
 <polyline fill="none" stroke="black" points="282.5,-156 403.5,-156 "/>
 <text text-anchor="middle" x="343" y="-139.4" font-family="Times Roman,serif" font-size="14.00">mimeType</text>
 <polyline fill="none" stroke="black" points="282.5,-130 403.5,-130 "/>
@@ -160,7 +160,7 @@
 <text text-anchor="middle" x="527" y="-183.4" font-family="Times Roman,serif" font-size="14.00">is a</text>
 </g>
 <!-- longmeta&#45;&gt;long -->
-<g id="edge18" class="edge"><title>longmeta:long&#45;&gt;long:k</title>
+<g id="edge18" class="edge"><title>longmeta:url&#45;&gt;long:k</title>
 <path fill="none" stroke="red" d="M404,-169C425.465,-169 452.6,-226.422 475.483,-240.777"/>
 <polygon fill="red" stroke="red" points="474.406,-244.108 485,-244 476.651,-237.478 474.406,-244.108"/>
 <text text-anchor="middle" x="434" y="-212.4" font-family="Times Roman,serif" font-size="14.00">is a</text>

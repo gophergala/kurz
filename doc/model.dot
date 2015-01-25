@@ -9,7 +9,7 @@ digraph kurz {
   language [ label="<k>Language|native name" ];
   likings [ label="<k>Likings|<user>user|<long>longUrl|ts" ];
   long [ label="<k>Long URL|value" ];
-  longmeta [ label="<k>Long metadata|<long>longUrl|mimeType|<language>language|imagePath|<info>origin" ];
+  longmeta [ label="<k>Long metadata|<url>url|mimeType|<language>language|imagePath|<info>origin" ];
   session [ label="<k>Session|<user>user|<info>info" ];
   short [ label="<k>Short URL|value|<long>shortFor|<domain>domain|<strategy>strategy|<user>submittedBy|submittedOn|isEnabled" ];
   strategy [ label="<k>Strategy|name" ];
@@ -27,10 +27,10 @@ digraph kurz {
 
   longmeta:info -> eventinfo:k;
   longmeta:language -> language:k;
-  longmeta:long -> long:k;
+  longmeta:url -> long:k;
 
   session:info -> eventinfo:k;
-  session:user -> user:k;  
+  session:user -> user:k;
 
   short:domain -> domain:k;
   short:long -> long:k;

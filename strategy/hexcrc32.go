@@ -19,11 +19,11 @@ type HexCrc32Strategy struct {
 	base baseStrategy
 }
 
-func (s HexCrc32Strategy) Name() string {
+func (y HexCrc32Strategy) Name() string {
 	return "hexCrc32"
 }
 
-func (s HexCrc32Strategy) Alias(short url.LongUrl, options ...interface{}) (url.ShortUrl, error) {
+func (y HexCrc32Strategy) Alias(short url.LongUrl, s storage.Storage, options ...interface{}) (url.ShortUrl, error) {
 	var ret url.ShortUrl
 
 	return ret, errors.New("HexCrc32 not implemented yet")

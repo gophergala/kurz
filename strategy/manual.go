@@ -21,7 +21,7 @@ Alias() implements AliasingStrategy.Alias().
 
   - options is expected to be a non empty single string
 */
-func (y ManualStrategy) Alias(long url.LongUrl, options ...interface{}) (url.ShortUrl, error) {
+func (y ManualStrategy) Alias(long url.LongUrl, s storage.Storage, options ...interface{}) (url.ShortUrl, error) {
 	var ret url.ShortUrl
 	var err error
 	if len(options) != 1 {

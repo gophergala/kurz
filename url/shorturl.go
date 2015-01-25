@@ -5,6 +5,7 @@ import (
 )
 
 type ShortUrl struct {
+	Id          int64
 	Value       string
 	ShortFor    LongUrl
 	Domain      string
