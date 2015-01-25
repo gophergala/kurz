@@ -1,17 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"github.com/FGM/kurz/storage"
-	"github.com/davecgh/go-spew/spew"
+	"github.com/FGM/kurz/strategy"
 	"log"
 )
 
 func main() {
-	err := storage.Service.Open("someuser:somepass@tcp(localhost:3306)/go_kurz")
+	err := storage.Service.Open()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer storage.Service.Close()
 
-	spew.Dump(storage.StrategyStatistics(storage.Service))
+	fmt.Print(strategy.Statistics.Refresh(storage.Service))
 }
